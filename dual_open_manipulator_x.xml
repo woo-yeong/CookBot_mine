@@ -1,0 +1,161 @@
+<mujoco model="dual_open_manipulator_x">
+  <compiler angle="radian" meshdir="assets" autolimits="true"/>
+
+  <default>
+    <joint armature="0.1" damping="10.0"/>
+    <position kp="1000" kv="200" forcerange="-100 100"/>
+  </default>
+
+  <asset>
+    <mesh name="link1" file="link1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="link2" file="link2.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="link3" file="link3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="link4" file="link4.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="link5" file="link5.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="gripper_left_palm" file="gripper_left_palm.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="gripper_right_palm" file="gripper_right_palm.stl" scale="0.001 0.001 0.001"/>
+    <texture type="2d" name="groundplane" builtin="checker"
+           rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+           width="300" height="300"/>
+    <texture type="skybox" builtin="gradient"
+           rgb1="0.85 0.9 0.95" rgb2="0.85 0.9 0.95"
+           width="512" height="3072"/>
+    <material name="groundplane" texture="groundplane"
+            texuniform="true" texrepeat="20 20"/>
+    <material name="table" rgba="0.82 0.71 0.55 1"/>
+  </asset>
+
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+    <rgba haze="0.85 0.9 0.95 1"/>
+    <global azimuth="120" elevation="-20"/>
+  </visual>
+
+  <worldbody>
+    <light pos="0 0 1.5" dir="0 0 -1" directional="true"/>
+    <geom name="floor" type="plane" size="0 0 0.05" material="groundplane"/>
+
+    <body name="table_body" pos="0 0 0.15">
+      <geom name="table" type="box" pos="0 0 0" size="0.3 0.15 0.05" material="table"/>
+      <geom name="table_leg1" type="box" size="0.025 0.025 0.15" pos=" 0.25  0.13 -0.15" rgba="0.3 0.3 0.3 1"/>
+      <geom name="table_leg2" type="box" size="0.025 0.025 0.15" pos="-0.25  0.13 -0.15" rgba="0.3 0.3 0.3 1"/>
+      <geom name="table_leg3" type="box" size="0.025 0.025 0.15" pos=" 0.25 -0.13 -0.15" rgba="0.3 0.3 0.3 1"/>
+      <geom name="table_leg4" type="box" size="0.025 0.025 0.15" pos="-0.25 -0.13 -0.15" rgba="0.3 0.3 0.3 1"/>
+    </body>
+
+    <body name="robot1_base" pos="-0.25 0 0.2">
+      <geom type="mesh" mesh="link1"/>
+      <body name="robot1_link2" pos="0.012 0 0.017">
+        <joint name="robot1_joint1" axis="0 0 1"/>
+        <geom type="mesh" mesh="link2"/>
+        <body name="robot1_link3" pos="0 0 0.0595">
+          <joint name="robot1_joint2" axis="0 1 0"/>
+          <geom type="mesh" mesh="link3"/>
+          <body name="robot1_link4" pos="0.024 0 0.128">
+            <joint name="robot1_joint3" axis="0 1 0"/>
+            <geom type="mesh" mesh="link4"/>
+            <body name="robot1_link5" pos="0.124 0 0">
+              <joint name="robot1_joint4" axis="0 1 0"/>
+              <geom type="mesh" mesh="link5"/>
+              <!-- 📷 왼쪽 로봇팔 말단 위 카메라 -->
+              <body name="left_camera_mount" pos="0.055 0 0.048">
+                <!-- 카메라 시점 정의 -->
+                <camera name="left_wrist_cam" 
+                        pos="0 0 0" 
+                        mode="fixed" 
+                        euler="0 1.57 0"
+                        focal="1.93e-3 1.93e-3" 
+                        resolution="1280 720" 
+                        sensorsize="3896e-6 2140e-6"/>
+
+                <!-- 카메라 외형 (네모 박스) -->
+                <geom type="box" size="0.005 0.01 0.01" rgba="0 0 0 1"/>
+              </body>
+              <body name="robot1_gripper_left" pos="0.0817 0.021 0">
+                <joint name="robot1_gripper_left_joint" type="slide" axis="0 1 0"/>
+                <geom type="mesh" mesh="gripper_left_palm"/>
+              </body>
+              <body name="robot1_gripper_right" pos="0.0817 -0.021 0">
+                <joint name="robot1_gripper_right_joint" type="slide" axis="0 -1 0"/>
+                <geom type="mesh" mesh="gripper_right_palm"/>
+              </body>
+              <body name="robot1_end_effector_target" pos="0.14 0 0">
+                <inertial pos="0 0 0" mass="0.001" diaginertia="1e-06 1e-06 1e-06"/>
+                <geom type="box" size="0.005 0.005 0.005" rgba="1 0 0 1" contype="0" conaffinity="0"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+
+    <body name="robot2_base" pos="0.25 0 0.2" euler="0 0 3.14159">
+      <geom type="mesh" mesh="link1"/>
+      <body name="robot2_link2" pos="0.012 0 0.017">
+        <joint name="robot2_joint1" axis="0 0 1"/>
+        <geom type="mesh" mesh="link2"/>
+        <body name="robot2_link3" pos="0 0 0.0595">
+          <joint name="robot2_joint2" axis="0 1 0"/>
+          <geom type="mesh" mesh="link3"/>
+          <body name="robot2_link4" pos="0.024 0 0.128">
+            <joint name="robot2_joint3" axis="0 1 0"/>
+            <geom type="mesh" mesh="link4"/>
+            <body name="robot2_link5" pos="0.124 0 0">
+              <joint name="robot2_joint4" axis="0 1 0"/>
+              <geom type="mesh" mesh="link5"/>
+              <!-- 📷 오른쪽 로봇팔 말단 위 카메라 -->
+              <body name="right_camera_mount" pos="0.055 0 0.048">
+                <!-- 카메라 시점 정의 -->
+                <camera name="right_wrist_cam" 
+                        pos="0 0 0" 
+                        mode="fixed" 
+                        euler="0 -1.57 0"
+                        focal="1.93e-3 1.93e-3" 
+                        resolution="1280 720" 
+                        sensorsize="3896e-6 2140e-6"/>
+
+                <!-- 카메라 외형 (네모 박스) -->
+                <geom type="box" size="0.005 0.01 0.01" rgba="0 0 0 1"/>
+              </body>   
+              <body name="robot2_gripper_left" pos="0.0817 0.021 0">
+                <joint name="robot2_gripper_left_joint" type="slide" axis="0 1 0"/>
+                <geom type="mesh" mesh="gripper_left_palm"/>
+              </body>
+              <body name="robot2_gripper_right" pos="0.0817 -0.021 0">
+                <joint name="robot2_gripper_right_joint" type="slide" axis="0 -1 0"/>
+                <geom type="mesh" mesh="gripper_right_palm"/>
+              </body>
+              <body name="robot2_end_effector_target" pos="0.14 0 0">
+                <inertial pos="0 0 0" mass="0.001" diaginertia="1e-06 1e-06 1e-06"/>
+                <geom type="box" size="0.005 0.005 0.005" rgba="1 0 0 1" contype="0" conaffinity="0"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <!-- robot1 -->
+    <position name="robot1_actuator_joint1" joint="robot1_joint1"/>
+    <position name="robot1_actuator_joint2" joint="robot1_joint2"/>
+    <position name="robot1_actuator_joint3" joint="robot1_joint3"/>
+    <position name="robot1_actuator_joint4" joint="robot1_joint4"/>
+    <position name="robot1_actuator_gripper_joint" joint="robot1_gripper_left_joint"/>
+
+    <!-- robot2 -->
+    <position name="robot2_actuator_joint1" joint="robot2_joint1"/>
+    <position name="robot2_actuator_joint2" joint="robot2_joint2"/>
+    <position name="robot2_actuator_joint3" joint="robot2_joint3"/>
+    <position name="robot2_actuator_joint4" joint="robot2_joint4"/>
+    <position name="robot2_actuator_gripper_joint" joint="robot2_gripper_left_joint"/>
+  </actuator>
+
+
+
+  <equality>
+    <joint joint1="robot1_gripper_left_joint" joint2="robot1_gripper_right_joint" polycoef="0 1 0 0 0"/>
+    <joint joint1="robot2_gripper_left_joint" joint2="robot2_gripper_right_joint" polycoef="0 1 0 0 0"/>
+  </equality>
+</mujoco>
