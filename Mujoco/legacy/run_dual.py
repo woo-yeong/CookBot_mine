@@ -2,11 +2,12 @@ import numpy as np
 import mujoco
 import time
 import cv2
+from pathlib import Path
 from mujoco.glfw import glfw
 
 # 모델 로드
-model_path = "dual_open_manipulator_x.xml"
-model = mujoco.MjModel.from_xml_path(model_path)
+model_path = Path(__file__).with_name("dual_open_manipulator_x.xml")
+model = mujoco.MjModel.from_xml_path(str(model_path))
 data = mujoco.MjData(model)
 
 # 카메라 ID

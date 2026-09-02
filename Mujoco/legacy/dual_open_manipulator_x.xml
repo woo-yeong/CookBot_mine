@@ -1,5 +1,5 @@
 <mujoco model="dual_open_manipulator_x">
-  <compiler angle="radian" meshdir="assets" autolimits="true"/>
+  <compiler angle="radian" meshdir="../assets" autolimits="true"/>
 
   <default>
     <joint armature="0.1" damping="10.0"/>
