@@ -18,17 +18,6 @@
 - `Mujoco/assets/`: 초기·후기 시뮬레이션이 함께 사용하는 3D mesh
 - `Mujoco/data_set_*/`: 동작 재생 및 변환 검증용 샘플 데이터
 
-## 나의 담당
-
-- 프로젝트 팀장
-- 실제 로봇 URDF를 활용한 MuJoCo 양팔 가상환경 구현
-- 카메라 시점 구성과 동작·데이터 수집 파이프라인 사전 검증
-- 텔레오퍼레이션 기반 학습 데이터 구축 및 검증
-
-## 출처
-
-이 저장소는 공동 프로젝트 결과물과 개인 개발 내용을 함께 정리한 저장소입니다. 통합한 팀 저장소의 원본은 [IAMJP520/CookingBot](https://github.com/IAMJP520/CookingBot)에서 확인할 수 있습니다.
-
 ## License
 
 MuJoCo 관련 코드는 각 디렉터리에 포함된 Apache License 2.0을 따릅니다.
